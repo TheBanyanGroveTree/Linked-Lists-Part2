@@ -12,15 +12,19 @@
 #include "Student.h"
 
 // Define function prototypes
-void addStudent(const int& INPUT_LENGTH);
-void printStudentInfo();
-void averageGPA();
-void deleteStudent();
-void quit();
+void addStudent(Node*& head, const int& INPUT_LENGTH);
+Node* sort(Node* head, Student* newStudent);
+void printStudentInfo(Node*& head);
+void averageGPA(Node*& head);
+void deleteStudent(Node*& head);
+void quit(Node*& head);
 
 using namespace std;
 
 int main() {
+  // Define linked list head Node
+  Node* head = NULL;
+  
   // Define const vars for commands
   const char ADD[] = "ADD";
   const char PRINT[] = "PRINT";
@@ -52,15 +56,15 @@ int main() {
     } else {
       // call appropriate method
       if (strcmp(userCommand, ADD) == 0) {
-	addStudent(INPUT_LENGTH);
+	addStudent(head, INPUT_LENGTH);
       } else if (strcmp(userCommand, PRINT) == 0) {
-	printStudentInfo();
+	//printStudentInfo(head);
       } else if (strcmp(userCommand, AVERAGE) == 0) {
-	averageGPA();
+	//averageGPA(head);
       } else if (strcmp(userCommand, DELETE) == 0) {
-	deleteStudent();
+	//deleteStudent(head);
       } else if (strcmp(userCommand, QUIT) == 0) {
-	quit();
+	//quit(head);
       }
     }
   }
@@ -68,8 +72,8 @@ int main() {
   return 0;
 }
 
-// Create new student entry and sort linked list by student id
-void addStudent(const int& INPUT_LENGTH) {
+// Create new student entry and sort linked list by student ID
+void addStudent(Node*& head, const int& INPUT_LENGTH) {
   // declare var for user input
   char firstName[INPUT_LENGTH];
   char lastName[INPUT_LENGTH];
@@ -90,4 +94,26 @@ void addStudent(const int& INPUT_LENGTH) {
   cout << "Enter the student's GPA: ";
   cin >> gpa;
   cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear input buffer
+
+  // create new Student
+  Student* newStudent = new Student(firstName, lastName, id, gpa);
+
+  // insert new node and sort linked list
+  head = sort(head, newStudent);
+}
+
+// Sort linked list by ID and insert new nodes accordingly
+Node* sort(Node* head, Student* newStudent) {
+  // base case: list is empty or at insertion point
+  if ((head == NULL) ||
+      (head->getStudent()->getID() > newStudent->getID())) {
+    // create new Node
+    Node* newNode = new Node(newStudent);
+    newNode->setNext(head); // new node points to current node
+    return newNode; // stop recursion: new node becomes new head of sublist
+  }
+  
+  // recursive call: call function on next node in list
+  head->setNext(sort(head->getNext(), newStudent));
+  return head; // return current node
 }
