@@ -8,13 +8,14 @@
 #include <cstring>
 #include <limits>
 #include <ios>
+#include <iomanip>
 #include "Node.h"
 #include "Student.h"
 
 // Define function prototypes
 void addStudent(Node*& head, const int& INPUT_LENGTH);
 Node* sort(Node* head, Student* newStudent);
-void printStudentInfo(Node*& head);
+void printStudentInfo(Node* head);
 void averageGPA(Node*& head);
 void deleteStudent(Node*& head);
 void quit(Node*& head);
@@ -58,7 +59,7 @@ int main() {
       if (strcmp(userCommand, ADD) == 0) {
 	addStudent(head, INPUT_LENGTH);
       } else if (strcmp(userCommand, PRINT) == 0) {
-	//printStudentInfo(head);
+	printStudentInfo(head);
       } else if (strcmp(userCommand, AVERAGE) == 0) {
 	//averageGPA(head);
       } else if (strcmp(userCommand, DELETE) == 0) {
@@ -116,4 +117,19 @@ Node* sort(Node* head, Student* newStudent) {
   // recursive call: call function on next node in list
   head->setNext(sort(head->getNext(), newStudent));
   return head; // return current node
+}
+
+// Print entries in linked list
+void printStudentInfo(Node* head) {
+  // base case: reached end of list
+  if (head == NULL) {
+    return;
+  }
+
+  // recursive call
+  cout << head->getStudent()->getFirstName() << ' '
+       << head->getStudent()->getLastName() << ", "
+       << head->getStudent()->getID() << ", "
+       << fixed << setprecision(2) << head->getStudent()->getGPA() << endl;
+  printStudentInfo(head->getNext());
 }
