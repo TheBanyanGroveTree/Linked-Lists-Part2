@@ -17,7 +17,7 @@ void addStudent(Node*& head, const int& INPUT_LENGTH);
 Node* sort(Node* head, Student* newStudent);
 void printStudentInfo(Node* head);
 void averageGPA(Node* head, float runningSum, int count);
-void deleteStudent(Node*& head);
+Node* deleteStudent(Node* head, int id);
 void quit(Node*& head);
 
 using namespace std;
@@ -50,8 +50,10 @@ int main() {
     }
 
     // validate input
-    if ((strcmp(userCommand, ADD) != 0) && (strcmp(userCommand, PRINT) != 0) &&
-	(strcmp(userCommand, AVERAGE) != 0) && (strcmp(userCommand, DELETE) != 0) &&
+    if ((strcmp(userCommand, ADD) != 0) &&
+	(strcmp(userCommand, PRINT) != 0) &&
+	(strcmp(userCommand, AVERAGE) != 0) &&
+	(strcmp(userCommand, DELETE) != 0) &&
 	(strcmp(userCommand, QUIT) != 0)) {
       cout << "Please input ADD, PRINT, AVERAGE, DELETE, or QUIT." << endl;
     } else {
@@ -63,7 +65,14 @@ int main() {
       } else if (strcmp(userCommand, AVERAGE) == 0) {
 	averageGPA(head, 0.0, 0);
       } else if (strcmp(userCommand, DELETE) == 0) {
-	//deleteStudent(head);
+	// prompt user for ID to delete
+	int userID = 0;
+	cout << "Enter the student's ID: ";
+	cin >> userID;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+	// delete student from linked list
+	head = deleteStudent(head, userID);
       } else if (strcmp(userCommand, QUIT) == 0) {
 	//quit(head);
       }
@@ -143,8 +152,29 @@ void averageGPA(Node* head, float runningSum, int count) {
     return;
   }
 
-  // recursive call
+  // update values to calculate average
   runningSum += head->getStudent()->getGPA();
   count++;
+
+  // recursive call
   averageGPA(head->getNext(), runningSum, count);
+}
+
+// Delete student with corresponding ID from linked list
+Node* deleteStudent(Node* head, int id) {
+  // base case 1: empty list
+  if (head == NULL) {
+    return NULL;
+  }
+
+  // base case 2: reached node to delete
+  if (head->getStudent()->getID() == id) {
+    Node* next = head->getNext();
+    delete head;
+    return next;
+  }
+  
+  // recursive call
+  head->setNext(deleteStudent(head->getNext(), id));
+  return head;
 }
