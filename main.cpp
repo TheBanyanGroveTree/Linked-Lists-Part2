@@ -16,7 +16,7 @@
 void addStudent(Node*& head, const int& INPUT_LENGTH);
 Node* sort(Node* head, Student* newStudent);
 void printStudentInfo(Node* head);
-void averageGPA(Node*& head);
+void averageGPA(Node* head, float runningSum, int count);
 void deleteStudent(Node*& head);
 void quit(Node*& head);
 
@@ -61,7 +61,7 @@ int main() {
       } else if (strcmp(userCommand, PRINT) == 0) {
 	printStudentInfo(head);
       } else if (strcmp(userCommand, AVERAGE) == 0) {
-	//averageGPA(head);
+	averageGPA(head, 0.0, 0);
       } else if (strcmp(userCommand, DELETE) == 0) {
 	//deleteStudent(head);
       } else if (strcmp(userCommand, QUIT) == 0) {
@@ -132,4 +132,19 @@ void printStudentInfo(Node* head) {
        << head->getStudent()->getID() << ", "
        << fixed << setprecision(2) << head->getStudent()->getGPA() << endl;
   printStudentInfo(head->getNext());
+}
+
+// Calculate and output the average GPA of all students 
+void averageGPA(Node* head, float runningSum, int count) {
+  // base case: reached end of list
+  if (head == NULL) {
+    cout << "Average GPA: " << fixed << setprecision(2)
+	 << (runningSum / count) << endl;
+    return;
+  }
+
+  // recursive call
+  runningSum += head->getStudent()->getGPA();
+  count++;
+  averageGPA(head->getNext(), runningSum, count);
 }
