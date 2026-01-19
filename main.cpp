@@ -1,7 +1,15 @@
 /**
-   Description: Linked Lists Part 2
+   Description: This program implements Student List using a linked list and
+   a student class. There are five commands: ADD, PRINT, AVERAGE, DELETE, and
+   QUIT. The "ADD" command prompts the user for student information and inserts
+   a new node into the linked list, sorting it by ID number from least to 
+   greatest. Next, the "PRINT" command outputs the information for all the
+   students currently stored in the linked list. Additionally, "AVERAGE"
+   calculates and outputs the average GPA for all students. The "DELETE" command
+   prompts the user for a student ID and deletes the node corresponding to that
+   student from the list. Lastly, the program ends with a "QUIT" command. 
    Author: Aahana Sapra
-   Date: 1/9/2026
+   Date: 1/18/2026
  */
 
 #include <iostream>
@@ -9,7 +17,7 @@
 #include <limits>
 #include <ios>
 #include <iomanip>
-#include "Node.h"
+#include "node.h"
 #include "Student.h"
 
 // Define function prototypes
@@ -18,12 +26,12 @@ Node* sort(Node* head, Student* newStudent);
 void printStudentInfo(Node* head);
 void averageGPA(Node* head, float runningSum, int count);
 Node* deleteStudent(Node* head, int id);
-void quit(Node*& head);
+void quit(Node* head, bool& keepModifying);
 
 using namespace std;
 
 int main() {
-  // Define linked list head Node
+  // Define head node in linked list
   Node* head = NULL;
   
   // Define const vars for commands
@@ -57,7 +65,7 @@ int main() {
 	(strcmp(userCommand, QUIT) != 0)) {
       cout << "Please input ADD, PRINT, AVERAGE, DELETE, or QUIT." << endl;
     } else {
-      // call appropriate method
+      // call appropriate function
       if (strcmp(userCommand, ADD) == 0) {
 	addStudent(head, INPUT_LENGTH);
       } else if (strcmp(userCommand, PRINT) == 0) {
@@ -74,7 +82,7 @@ int main() {
 	// delete student from linked list
 	head = deleteStudent(head, userID);
       } else if (strcmp(userCommand, QUIT) == 0) {
-	//quit(head);
+	quit(head, keepModifying);
       }
     }
   }
@@ -177,4 +185,17 @@ Node* deleteStudent(Node* head, int id) {
   // recursive call
   head->setNext(deleteStudent(head->getNext(), id));
   return head;
+}
+
+// Delete linked list and change updating status 
+void quit(Node* head, bool& keepModifying) {
+  // base case: empty list
+  if (head == NULL) {
+    keepModifying = false;
+    return;
+  }
+
+  // recursive call
+  quit(head->getNext(), keepModifying);
+  delete head; // delete current node
 }

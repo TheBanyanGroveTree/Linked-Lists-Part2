@@ -10,10 +10,10 @@ class Student {
  public:
   Student(); // Default constructor
   Student(char*, char*, int, float); // Constructor with parameters
-  char* getFirstName();
-  char* getLastName();
-  int getID();
-  float getGPA();
+  char* getFirstName(); // Get first name
+  char* getLastName(); // Get last name
+  int getID(); // Get ID
+  float getGPA(); // Get GPA
   ~Student(); // Destructor
  private:
   char* firstName;
